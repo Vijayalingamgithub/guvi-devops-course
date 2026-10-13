@@ -24,8 +24,8 @@ services:
       dockerfile: api/Dockerfile
     environment:
       AWS_REGION: ap-south-1
-      AWS_ACCESS_KEY_ID: local-test-only
-      AWS_SECRET_ACCESS_KEY: local-test-only
+      AWS_ACCESS_KEY_ID: localtestonly
+      AWS_SECRET_ACCESS_KEY: localtestonly
       TASKS_TABLE_NAME: brain-tasks-local
       DYNAMODB_ENDPOINT: http://dynamodb:8000
     networks:
