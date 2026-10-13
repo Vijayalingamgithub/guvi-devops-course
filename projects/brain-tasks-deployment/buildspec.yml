@@ -1,0 +1,30 @@
+version: 0.2
+env:
+  shell: bash
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+      python: 3.12
+    commands:
+      - cd "$CODEBUILD_SRC_DIR/${PROJECT_DIRECTORY:-.}"
+      - python3 scripts/validate-dist.py
+      - python3 -m venv /tmp/brain-tasks-api-tests
+      - /tmp/brain-tasks-api-tests/bin/pip install -r api/requirements.txt -r requirements-test.txt
+      - /tmp/brain-tasks-api-tests/bin/python -m pytest tests -q
+  pre_build:
+    commands:
+      - bash scripts/prepare-build.sh
+  build:
+    commands:
+      - bash scripts/build-image.sh
+  post_build:
+    commands:
+      - test "$CODEBUILD_BUILD_SUCCEEDING" = "1"
+      - bash scripts/publish-image.sh
+artifacts:
+  base-directory: '$PROJECT_DIRECTORY/out'
+  files:
+    - manifests.yaml
+    - image.json
+    - release.json

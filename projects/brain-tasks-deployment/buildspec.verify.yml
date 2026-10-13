@@ -1,0 +1,15 @@
+version: 0.2
+env:
+  shell: bash
+phases:
+  install:
+    commands:
+      - cd "$CODEBUILD_SRC_DIR/${PROJECT_DIRECTORY:-.}"
+      - bash scripts/install-kubectl.sh
+  build:
+    commands:
+      - bash scripts/verify-deployment.sh
+artifacts:
+  base-directory: '$PROJECT_DIRECTORY/submission-evidence'
+  files:
+    - '**/*'
