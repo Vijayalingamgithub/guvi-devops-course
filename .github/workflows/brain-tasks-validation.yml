@@ -1,0 +1,70 @@
+name: Brain Tasks validation
+on:
+  pull_request:
+    paths:
+      - projects/brain-tasks-deployment/**
+      - .github/workflows/brain-tasks-validation.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: brain-tasks-validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+        working-directory: projects/brain-tasks-deployment
+    steps:
+      - name: Fetch the exact commit with Git CLI
+        working-directory: .
+        run: |
+          git init .
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git fetch --depth=1 origin "$GITHUB_SHA"
+          git checkout --detach FETCH_HEAD
+      - name: API, release and shell checks
+        run: |
+          python3 -m venv /tmp/brain-tasks-api-tests
+          /tmp/brain-tasks-api-tests/bin/pip install -r api/requirements.txt -r requirements-test.txt
+          /tmp/brain-tasks-api-tests/bin/python -m pytest tests -q
+          python3 scripts/validate-dist.py
+          shellcheck scripts/*.sh nginx/entrypoint.sh
+      - name: Terraform formatting and provider validation
+        run: |
+          curl --fail --silent --show-error -O https://releases.hashicorp.com/terraform/1.13.5/terraform_1.13.5_linux_amd64.zip
+          curl --fail --silent --show-error -O https://releases.hashicorp.com/terraform/1.13.5/terraform_1.13.5_SHA256SUMS
+          awk '$2 == "terraform_1.13.5_linux_amd64.zip" {print}' terraform_1.13.5_SHA256SUMS | sha256sum --check -
+          unzip -o terraform_1.13.5_linux_amd64.zip -d /tmp/brain-tasks-terraform
+          /tmp/brain-tasks-terraform/terraform -chdir=infra fmt -check
+          /tmp/brain-tasks-terraform/terraform -chdir=infra init -backend=false -input=false -lockfile=readonly
+          /tmp/brain-tasks-terraform/terraform -chdir=infra validate -no-color
+      - name: Build and run the frontend Docker image
+        run: |
+          docker build --platform linux/amd64 -t brain-tasks:validation .
+          bash scripts/smoke-test.sh brain-tasks:validation
+          BROWSER_TEST_OUTPUT=out/browser-validation bash scripts/browser-test.sh brain-tasks:validation
+      - name: Run both application images with local DynamoDB
+        run: |
+          printf '%s\n' ci-validation-password | bash scripts/create-auth-file.sh
+          docker compose up --build -d --wait --wait-timeout 180
+          python3 tests/compose-check.py
+      - name: Collect Compose logs and stop local test containers
+        if: always()
+        run: |
+          mkdir -p out
+          docker compose logs --no-color > out/compose-validation.log 2>&1 || true
+          docker compose down --remove-orphans || true
+      - name: Save validation evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: brain-tasks-validation
+          retention-days: 14
+          path: |
+            projects/brain-tasks-deployment/out/browser-validation/*
+            projects/brain-tasks-deployment/out/compose-validation.json
+            projects/brain-tasks-deployment/out/compose-validation.log

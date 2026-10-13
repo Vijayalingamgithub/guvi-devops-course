@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "runtime": "Docker Compose",
+  "checks": [
+    "API authentication",
+    "empty local database",
+    "create",
+    "read",
+    "list",
+    "update",
+    "delete",
+    "missing task"
+  ]
+}

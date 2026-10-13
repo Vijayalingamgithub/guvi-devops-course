@@ -1,0 +1,60 @@
+{
+  "repository": "Vijayalingamgithub/guvi-devops-course",
+  "commit": "b5d8a67707c981c6aaceee81e8cbbd42adc8ea75",
+  "run_id": 38353224267,
+  "run_url": "https://github.com/Vijayalingamgithub/guvi-devops-course/actions/runs/38353224267",
+  "event": "pull_request",
+  "conclusion": "success",
+  "completed_at": "2026-10-13T05:49:22Z",
+  "jobs": [
+    {
+      "name": "validate",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Fetch the exact commit with Git CLI",
+          "conclusion": "success"
+        },
+        {
+          "name": "API, release and shell checks",
+          "conclusion": "success"
+        },
+        {
+          "name": "Terraform formatting and provider validation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build and run the frontend Docker image",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run both application images with local DynamoDB",
+          "conclusion": "success"
+        },
+        {
+          "name": "Collect Compose logs and stop local test containers",
+          "conclusion": "success"
+        },
+        {
+          "name": "Save validation evidence",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "artifact": {
+    "id": 11791448465,
+    "name": "brain-tasks-validation",
+    "digest": "sha256:6fdf97317d0b5977734c792bfb7d5eb85377ba58ec4888b741e741a4507526dc",
+    "expires_at": "2026-10-27T05:49:20Z"
+  },
+  "scope": "No AWS resources created. Docker Compose uses isolated in-memory DynamoDB."
+}

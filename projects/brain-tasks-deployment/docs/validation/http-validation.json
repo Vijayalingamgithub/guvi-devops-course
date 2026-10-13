@@ -1,0 +1,38 @@
+[
+  {
+    "path": "/healthz",
+    "authenticated": false,
+    "status": 200,
+    "result": "PASS"
+  },
+  {
+    "path": "/",
+    "authenticated": false,
+    "status": 401,
+    "result": "PASS"
+  },
+  {
+    "path": "/api/v1/tasks",
+    "authenticated": false,
+    "status": 401,
+    "result": "PASS"
+  },
+  {
+    "path": "/",
+    "authenticated": true,
+    "status": 200,
+    "result": "PASS"
+  },
+  {
+    "path": "/createTask",
+    "authenticated": true,
+    "status": 200,
+    "result": "PASS"
+  },
+  {
+    "path": "/assets/missing.js",
+    "authenticated": true,
+    "status": 404,
+    "result": "PASS"
+  }
+]

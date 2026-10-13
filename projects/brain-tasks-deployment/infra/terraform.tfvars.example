@@ -1,0 +1,16 @@
+aws_region                   = "ap-south-1"
+project_name                 = "brain-tasks"
+github_repository            = "Vijayalingamgithub/guvi-devops-course"
+github_branch                = "brain-tasks-deployment"
+project_directory            = "projects/brain-tasks-deployment"
+administrator_principal_arn  = "arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_SSO_ROLE"
+administrator_cidrs          = ["YOUR_PUBLIC_IP/32"]
+kubernetes_version           = "1.36"
+single_nat_gateway           = false
+# First apply creates infrastructure without starting a pipeline prematurely.
+pipeline_enabled             = false
+# Optional: reuse an existing AVAILABLE CodeConnections connection.
+github_connection_arn        = ""
+# Optional: enable NLB TLS on port 443 with an issued certificate in this region.
+acm_certificate_arn          = ""
+log_retention_days           = 14
