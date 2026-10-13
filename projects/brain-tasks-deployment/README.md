@@ -2,7 +2,7 @@
 
 This project packages the supplied compiled React application on **port 3000**, builds immutable container releases in CodeBuild, stores them in ECR, and deploys them using CodePipeline's native **EKS Deploy action**. A final verification stage records the live application URL and load balancer ARN.
 
-**Delivery status:** source and validation records are prepared in your GitHub course repository on branch `brain-tasks-deployment`, under `projects/brain-tasks-deployment`. AWS provisioning still requires authenticated account access. No live cluster, successful AWS pipeline execution or load balancer ARN is claimed. See [VALIDATION.md](docs/VALIDATION.md).
+**Delivery status:** the complete project is published in your GitHub course repository on branch `brain-tasks-deployment`, under `projects/brain-tasks-deployment`, with [draft pull request #1](https://github.com/Vijayalingamgithub/guvi-devops-course/pull/1). [GitHub validation passed](https://github.com/Vijayalingamgithub/guvi-devops-course/actions/runs/38353224267), including Terraform validation, both Docker images, browser checks and real Compose/API CRUD. AWS provisioning still requires authenticated account access. No live cluster, successful AWS pipeline execution or load balancer ARN is claimed. See [VALIDATION.md](docs/VALIDATION.md).
 
 ## Why the supplied app needs a small API
 

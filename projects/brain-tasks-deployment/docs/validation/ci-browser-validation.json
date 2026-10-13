@@ -1,0 +1,58 @@
+{
+  "result": "PASS",
+  "checks": [
+    "initial task list",
+    "search",
+    "status filter",
+    "direct create route",
+    "create and refreshed list",
+    "numeric edit ID",
+    "update and refreshed list",
+    "delete",
+    "mobile render",
+    "no JavaScript page errors"
+  ],
+  "data": "isolated API fixtures",
+  "requests": [
+    {
+      "method": "GET",
+      "pathname": "/api/v1/tasks"
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/v1/tasks"
+    },
+    {
+      "method": "POST",
+      "pathname": "/api/v1/tasks"
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/v1/tasks"
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/v1/tasks/4"
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/v1/tasks"
+    },
+    {
+      "method": "PUT",
+      "pathname": "/api/v1/tasks/4"
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/v1/tasks"
+    },
+    {
+      "method": "DELETE",
+      "pathname": "/api/v1/tasks/4"
+    },
+    {
+      "method": "GET",
+      "pathname": "/api/v1/tasks"
+    }
+  ]
+}

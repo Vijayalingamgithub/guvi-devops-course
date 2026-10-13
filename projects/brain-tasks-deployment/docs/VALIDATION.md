@@ -1,6 +1,6 @@
 # Validation record
 
-Validation date: **11 October 2026**. This record distinguishes completed checks from infrastructure that still requires AWS access.
+Validation dates: **11 October 2026** in the preparation workspace and **13 October 2026** on GitHub's Ubuntu runner. This record distinguishes completed checks from infrastructure that still requires AWS access.
 
 ## Completed in the preparation workspace
 
@@ -35,7 +35,20 @@ Browser screenshots use isolated API fixtures with disposable tasks. They demons
 
 The course repository's `.github/workflows/brain-tasks-validation.yml` validates this project folder. It fetches the exact commit with the Git CLI, runs the API/release tests and ShellCheck, runs Terraform provider validation, builds and runs the frontend image, exercises the browser, and runs both application images against local DynamoDB with real HTTP CRUD checks. It saves logs and screenshots as a workflow artifact. It uses no AWS credentials and creates no AWS resources.
 
-Check the actual GitHub Actions run before calling these runner checks successful. Adding the workflow alone is not a successful execution.
+**All runner checks passed** in [GitHub Actions run 38353224267](https://github.com/Vijayalingamgithub/guvi-devops-course/actions/runs/38353224267), against application/workflow commit `b5d8a67707c981c6aaceee81e8cbbd42adc8ea75` on 13 October 2026.
+
+| Runner check | Verified result |
+|---|---|
+| API/release tests and ShellCheck | 12 tests passed; asset validation and shell checks passed |
+| Terraform | Signed provider initialization, formatting and `terraform validate` passed |
+| Frontend Docker image | Built and ran as UID 101 with a read-only filesystem; health, authentication, routes and security checks passed |
+| Browser against Docker frontend | All 10 UI checks passed; fresh screenshots saved in the workflow artifact |
+| API Docker image and Compose stack | Both application images built and became healthy with local DynamoDB |
+| Real HTTP integration | Authentication, create, read, list, update, delete and missing-task checks passed through Nginx against the local database |
+
+The first runner attempts exposed a missing `rg` command and DynamoDB Local's alphanumeric access-key requirement; both were corrected before the successful run. These are disposable local credentials. No AWS credentials were used.
+
+Persisted evidence: [run summary](validation/github-run.json), [Docker browser results](validation/ci-browser-validation.json), and [Compose HTTP results](validation/ci-compose-validation.json). The workflow's downloadable `brain-tasks-validation` artifact includes fresh screenshots and container logs; its retention is 14 days. Later documentation-only commits do not change the tested application code.
 
 ## Workspace limitations
 
