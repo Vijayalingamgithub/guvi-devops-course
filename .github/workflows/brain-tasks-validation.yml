@@ -4,11 +4,6 @@ on:
     paths:
       - projects/brain-tasks-deployment/**
       - .github/workflows/brain-tasks-validation.yml
-  push:
-    branches: [brain-tasks-deployment]
-    paths:
-      - projects/brain-tasks-deployment/**
-      - .github/workflows/brain-tasks-validation.yml
   workflow_dispatch:
 permissions:
   contents: read
@@ -42,7 +37,7 @@ jobs:
         run: |
           curl --fail --silent --show-error -O https://releases.hashicorp.com/terraform/1.13.5/terraform_1.13.5_linux_amd64.zip
           curl --fail --silent --show-error -O https://releases.hashicorp.com/terraform/1.13.5/terraform_1.13.5_SHA256SUMS
-          rg ' terraform_1.13.5_linux_amd64.zip$' terraform_1.13.5_SHA256SUMS | sha256sum --check -
+          awk '$2 == "terraform_1.13.5_linux_amd64.zip" {print}' terraform_1.13.5_SHA256SUMS | sha256sum --check -
           unzip -o terraform_1.13.5_linux_amd64.zip -d /tmp/brain-tasks-terraform
           /tmp/brain-tasks-terraform/terraform -chdir=infra fmt -check
           /tmp/brain-tasks-terraform/terraform -chdir=infra init -backend=false -input=false -lockfile=readonly
@@ -51,7 +46,7 @@ jobs:
         run: |
           docker build --platform linux/amd64 -t brain-tasks:validation .
           bash scripts/smoke-test.sh brain-tasks:validation
-          bash scripts/browser-test.sh brain-tasks:validation
+          BROWSER_TEST_OUTPUT=out/browser-validation bash scripts/browser-test.sh brain-tasks:validation
       - name: Run both application images with local DynamoDB
         run: |
           printf '%s\n' ci-validation-password | bash scripts/create-auth-file.sh
@@ -70,7 +65,6 @@ jobs:
           name: brain-tasks-validation
           retention-days: 14
           path: |
-            projects/brain-tasks-deployment/docs/screenshots/*.png
-            projects/brain-tasks-deployment/docs/screenshots/browser-validation.json
+            projects/brain-tasks-deployment/out/browser-validation/*
             projects/brain-tasks-deployment/out/compose-validation.json
             projects/brain-tasks-deployment/out/compose-validation.log
